@@ -1,0 +1,6 @@
+DELIMITER //
+CREATE FUNCTION inviteExists(id1 INT UNSIGNED, id2 INT UNSIGNED)
+RETURNS TINYINT
+BEGIN
+    RETURN EXISTS (SELECT 1 FROM invites WHERE id_inviting = id1 AND id_invited = id2);
+END //
