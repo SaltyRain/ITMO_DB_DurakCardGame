@@ -1,0 +1,2 @@
+DELIMITER //
+CREATE FUNCTION getCardSuit(card)

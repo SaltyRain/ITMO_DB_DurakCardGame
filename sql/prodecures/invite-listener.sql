@@ -5,7 +5,7 @@ invitelistener_label : BEGIN
     DECLARE userid2 INT UNSIGNED DEFAULT 0;
 
     IF(not checkPassword(user_login, user_password)) THEN
-        SELECT "INCORRECT PSD";
+        SELECT "INCORRECT PSWD";
         LEAVE invitelistener_label;
     END IF;
 

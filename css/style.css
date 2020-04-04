@@ -3,7 +3,14 @@
 body {
     background-color: #224623;
     color: white;
+    height: 100vh;
 }
+
+main {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    }
 
 .page-heading {
     text-align: center;
@@ -203,4 +210,144 @@ body {
     background: #000;
     display: none;
     will-change: opacity;
+}
+
+/* ------------------------------ GAME -------------------------------- */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+    }
+    
+    .table-card {
+    display: inline-block;
+    }
+    .table-card img {
+    width: 160px;
+    height: auto;
+    }
+    
+.btn {
+    padding: 0;
+    border: none;
+    color: inherit;
+    background-color: #a3bfca;
+    display: inline-block;
+    width: 160px;
+    font-size: 18px;
+    height: 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    }
+    .btn:hover {
+    background-color: #70868f;
+    }
+    .btn:disabled {
+        background-color: #70868f;
+        cursor: default;
+        color: #96acb4;
+    }
+
+.hand {
+    position: fixed;
+    top: 88%;
+    left: 25%;
+    display: flex;
+    flex-direction: row;
+    }
+    .hand__card {
+    position: relative;
+    }
+    .hand__card img {
+    width: 100px;
+    height: auto;
+    }
+    .hand__card:hover {
+    cursor: pointer;
+    margin-top: -200px;
+    }
+    .hand__card:hover img {
+    width: 200px;
+    }
+    .hand__btn {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 15px;
+    margin-left: 220px;
+    z-index: -1;
+    }
+    
+    .deck {
+    position: fixed;
+    top: 30%;
+    left: 3%;
+    }
+    .deck__kozyr {
+    position: absolute;
+    margin-left: 50px;
+    z-index: -1;
+    transform: rotate(90deg);
+    }
+    .deck__back-card {
+    position: absolute;
+    }
+    
+    .oponent-hand {
+    position: fixed;
+    left: 25%;
+    top: -8%;
+    display: flex;
+    flex-direction: row;
+    }
+    .oponent-hand__card {
+    margin-left: 3px;
+    }
+    .oponent-hand__card img {
+    width: 100px;
+    height: auto;
+    }
+    
+    .table {
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    }
+    .table__card {
+    position: absolute;
+    }
+    .table__card_defend {
+    padding-left: 50px;
+    transform: rotate(20deg);
+    z-index: 1;
+    }
+    
+    .trash {
+    position: fixed;
+    right: 5%;
+    top: 30%;
+    }
+
+
+/*_______________________game-info________________________*/
+
+.game-info {
+    position: bottom;
+    margin-top: 700px;
+    
+}
+
+.game-info__btn {
+    margin-left: 30px;
+}
+
+.game-info__whoose-turn {
+    display: block;
+    color: #fff;
+    font-size: 20px;
+    padding-bottom: 16px;
 }

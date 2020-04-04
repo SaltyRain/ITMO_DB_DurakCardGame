@@ -49,14 +49,20 @@ CREATE TABLE playersCards (
 
 
 
-CREATE TABLE attackingCard (
-    id_card INT UNSIGNED NOT NULL PRIMARY KEY,
-    FOREIGN KEY (id_card) REFERENCES cards(id_card)
+CREATE TABLE attackingCards (
+    id_card INT UNSIGNED NOT NULL,
+    id_deck INT UNSIGNED NOT NULL,
+    FOREIGN KEY (id_card) REFERENCES cards(id_card),
+    FOREIGN KEY (id_deck) REFERENCES decks(id_deck),
+    PRIMARY KEY(id_card, id_deck)
 );
 
-CREATE TABLE defendingCard (
-    id_card INT UNSIGNED PRIMARY KEY,
-    FOREIGN KEY (id_card) REFERENCES cards(id_card)
+CREATE TABLE defendingCards (
+    id_card INT NOT NULL,
+    id_deck INT UNSIGNED NOT NULL,
+    FOREIGN KEY (id_card) REFERENCES cards(id_card),
+    FOREIGN KEY (id_deck) REFERENCES decks(id_deck),
+    PRIMARY KEY(id_card, id_deck)
 );
 
 
