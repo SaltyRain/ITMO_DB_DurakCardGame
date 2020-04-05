@@ -11,6 +11,8 @@ function initialDraw() {
 
     drawPlayerRole(currentGameStatus.attackerId);
     drawCounter(currentGameStatus.deckCardsAmount);
+
+    drawSuit();
 }
 
 function drawTableCard(sectionName, containerClassName, cardId) {
@@ -56,6 +58,23 @@ function drawPlayerRole(attackerId) {
     }
     else {
         whooseTurn.textContent = 'Ход противника';
+    }
+}
+
+function drawSuit() {
+    if (+currentGameStatus.deckCardsAmount === 0) {
+        if ((document.querySelector('.deck__back-card')) === null) {
+            const section = document.querySelector('.deck');
+            const container = document.createElement('div');
+            container.className = 'deck__back-card';
+    
+            const suit = document.createElement('img');
+            suit.src = 'img/' + window.trumpSuit + '.png';
+           
+        }
+        else {
+            document.querySelector('.deck__back-card').children[0].src = 'img/' + window.trumpSuit + '.png';
+        }
     }
 }
 

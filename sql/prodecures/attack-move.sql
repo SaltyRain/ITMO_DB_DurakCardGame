@@ -31,8 +31,9 @@ attackmove_label : BEGIN
     END IF;
 
 
+
     -- Добавляем карту на стол в ячейку атакуюшей карты
-    INSERT INTO attackingCards(id_card, id_deck) VALUE (typecardid, deckid);
+    INSERT INTO attackingCards(id_card, id_deck) VALUE (cardId, deckid);
     -- Удаляем карту и руки игрока
     DELETE FROM playersCards WHERE id_card = cardId AND id_player = playerId;
 

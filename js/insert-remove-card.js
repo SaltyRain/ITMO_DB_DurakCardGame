@@ -21,6 +21,13 @@ function removeCard(containerClassName) {
     document.querySelectorAll('.' + containerClassName + ':last-child')[0].remove();
 }
 
+function removeDeckCard(containerClassName) {
+    console.log(containerClassName);
+    document.querySelectorAll('.' + containerClassName)[0].remove();
+}
+
 function removeParticularCard(cardId) {
-    document.getElementById(cardId).parentNode.remove();
+    console.log(cardId);
+    console.log(String(cardId));
+    document.getElementById(String(cardId)).parentNode.remove();
 }

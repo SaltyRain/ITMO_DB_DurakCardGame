@@ -43,14 +43,13 @@ defendmove_label : BEGIN
         -- Проверяем, может ли игрок отбиться этой картой
         IF ((attackCardSuit = gameTrumpSuit AND defendCardSuit = gameTrumpSuit AND defendtypecard > attacktypecard) 
             OR 
-            (attackCardSuit <> gameTrumpSuit AND defendCardSuit <> gameTrumpSuit AND defendtypecard > attacktypecard)
+            (attackCardSuit <> gameTrumpSuit AND defendCardSuit <> gameTrumpSuit AND defendCardSuit = attackCardSuit AND defendtypecard > attacktypecard)
             OR 
             (attackCardSuit <> gameTrumpSuit AND defendCardSuit = gameTrumpSuit)
-            
             )
         THEN
             -- Игрок может отбиться. Карта кладется на стол
-            INSERT INTO defendingCards(id_card, id_deck) VALUE (defendtypecard, deckid);
+            INSERT INTO defendingCards(id_card, id_deck) VALUE (defendCardId, deckid);
             -- Удаляем из руки
             DELETE FROM playersCards WHERE id_card = defendCardId AND id_player = playerId;
             SELECT "INSERTING DEFENDING CARD";

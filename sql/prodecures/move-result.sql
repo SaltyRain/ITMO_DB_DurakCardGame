@@ -33,6 +33,8 @@ moveresult_label : BEGIN
     IF (defCard = -1) THEN
         -- карта атакующего добавляется противнику в руку
         INSERT INTO playersCards(id_card, id_player) VALUE (attackCard, defenderid);
+
+
     ELSE
         -- Игрок отбился
         -- Меняем атакующего игрока
@@ -48,13 +50,15 @@ moveresult_label : BEGIN
         -- если колода не закончилась
         IF (EXISTS (SELECT * FROM cardsInDeck WHERE id_deck = deckid)) THEN
             
-            -- достаем следующую карту из колоды
-            SET nextDeckCard = (SELECT MIN(id_card) FROM cardsInDeck WHERE id_deck = deckid);
-            -- даем карту атакующему игроку
-            INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, attackerid);
-            DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
+            IF ((SELECT COUNT(*) FROM playersCards WHERE id_player = attackerid) < 6) THEN
+                -- достаем следующую карту из колоды
+                SET nextDeckCard = (SELECT MIN(id_card) FROM cardsInDeck WHERE id_deck = deckid);
+                -- даем карту атакующему игроку
+                INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, attackerid);
+                DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
 
-            SET newAttackerCardId = nextDeckCard;
+                SET newAttackerCardId = nextDeckCard;
+            END IF;
         ELSE 
             SET newAttackerCardId = 0;
         END IF;
@@ -64,13 +68,15 @@ moveresult_label : BEGIN
             -- если колода не закончилась
             IF (EXISTS (SELECT * FROM cardsInDeck WHERE id_deck = deckid)) THEN
                 
-                -- достаем следующую карту из колоды
-                SET nextDeckCard = (SELECT MIN(id_card) FROM cardsInDeck WHERE id_deck = deckid);
-                -- даем карту атакующему игроку
-                INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, defenderid);
-                DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
+                IF ((SELECT COUNT(*) FROM playersCards WHERE id_player = defenderid) < 6) THEN
+                    -- достаем следующую карту из колоды
+                    SET nextDeckCard = (SELECT MIN(id_card) FROM cardsInDeck WHERE id_deck = deckid);
+                    -- даем карту атакующему игроку
+                    INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, defenderid);
+                    DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
 
-                SET existsNewDefenderCard = 1;
+                    SET existsNewDefenderCard = 1;
+                END IF;
             ELSE 
                 SET existsNewDefenderCard = 0;
             END IF;
@@ -84,9 +90,12 @@ moveresult_label : BEGIN
     END IF;
 
     SET cardsInDeckAmount = (SELECT COUNT(*) FROM cardsInDeck WHERE id_deck = deckid);
+
     -- Удаляем карты со стола
-    DELETE FROM attackingCards WHERE id_deck = deckid;
-    DELETE FROM defendingCards WHERE id_deck = deckid;
+    -- DELETE FROM attackingCards WHERE id_deck = deckid;
+    -- DELETE FROM defendingCards WHERE id_deck = deckid;
+    TRUNCATE TABLE attackingCards;
+    TRUNCATE TABLE defendingCards;
 
     SELECT winnerId, newAttackerCardId, existsNewDefenderCard, cardsInDeckAmount;
 END //

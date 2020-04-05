@@ -15,6 +15,7 @@
             activeCard.classList.add('hand-card-active');
             // alert(document.querySelector('.hand-card-active').id);
             // chooseMove(LOGIN, PASSWORD, GAMEID); 
+            console.log(activeCard.id);
             chooseMove(activeCard.id);
         });
     });

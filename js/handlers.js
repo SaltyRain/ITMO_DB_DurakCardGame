@@ -50,7 +50,6 @@ function _changegamestatus(response, obj) {
 
     // Изменение кол-ва карт в руке противника
     if (+currentGameStatus.oponentCardsAmount !== +newGameStatus.oponentCardsAmount) {
-        console.log(newGameStatus.oponentCardsAmount);
         changeOponentHand(+newGameStatus.oponentCardsAmount);
         console.log('Изменение кол-ва карт в руке противника');
         flag = true;
@@ -58,8 +57,6 @@ function _changegamestatus(response, obj) {
 
     // Изменение моей руки
     if (+currentGameStatus.myCardsAmount !== +newGameStatus.myCardsAmount) {
-        console.log(newGameStatus.myCardsAmount);
-        console.log(newGameStatus.myCardsSet);
         changeMyHand(+newGameStatus.myCardsAmount, +newGameStatus.myCardsSet);
         console.log('Изменение моей руки');
         flag = true;
@@ -67,14 +64,14 @@ function _changegamestatus(response, obj) {
 
     // Изменение атакующей карты
     if (+currentGameStatus.attackingCard !== +newGameStatus.attackingCard) {
-        changeTableCardOrShowPassMessage('table', 'table-card.table__card.table__card_attack', +newGameStatus.attackingCard);
+        changeTableCardOrShowPassMessage('table', 'table__card_attack', 'table-card.table__card.table__card_attack', +newGameStatus.attackingCard);
         console.log('Изменение атакующей карты');
         flag = true;
     }
 
     // Изменение защищающейся карты
     if (+currentGameStatus.defendingCard !== +newGameStatus.defendingCard) {
-        changeTableCardOrShowPassMessage('table', 'table-card.table__card.table__card_defend', +newGameStatus.defendingCard);
+        changeTableCardOrShowPassMessage('table', 'table__card_defend', 'table-card.table__card.table__card_defend', +newGameStatus.defendingCard);
         console.log('Изменение защищающейся карты');
         flag = true;
     }
@@ -118,24 +115,26 @@ function _changegamestatus(response, obj) {
     // изменяем состояние игры
     if (flag === true) {
         console.log('Меняю состояние игры');
-        currentGameStatus = updateGameStatus(response.responseText);
+        console.log(currentGameStatus);
+        window.currentGameStatus = updateGameStatus(response.responseText);
     }
 }
 
 function _attackmove(response, obj) {
     console.log('_attackmove');
-    console.log(response);
+    // console.log(response);
     let resp_ob = JSON.parse(response.responseText);
-    console.log(resp_ob);
+    // console.log(resp_ob);
+    console.log(obj);
     console.log(obj['cardId']);
     if (("INCORRECT PSWD" in resp_ob) || ("NOT YOUR ATTACK TURN" in resp_ob) || ("YOU DONT HAVE THIS CARD" in resp_ob) || ("THERE IS ATTACKING CARD ALREADY" in resp_ob))
         return;
     if (("INSERTING ATTACKING CARD" in resp_ob)) {
         // убираем карту из руки и вставляем ее на стол
-        removeParticularCard(obj['cardid']);
+        removeParticularCard(obj['cardId']);
         insertCard(document.querySelector('.table'), ATTACKER_CARD_CONTAINER, obj['cardid']);
 
-        currentGameStatus.playerCard.delete(obj['cardid']);
+        currentGameStatus.myCardsSet.delete(obj['cardid']);
         currentGameStatus.attackingCard = obj['cardid'];
     }
 }
@@ -151,7 +150,7 @@ function _defendmove(response, obj) {
         removeParticularCard(obj['defendCardId']);
         insertCard(document.querySelector('.table'), DEFENDER_CARD_CONTAINER, obj['defendCardId']);
 
-        currentGameStatus.playerCard.delete(obj['defendCardId']);
+        currentGameStatus.myCardsSet.delete(obj['defendCardId']);
         currentGameStatus.defendingCard = obj['defendCardId'];
     }
     if (("YOU PASSED" in resp_ob)) {

@@ -21,7 +21,7 @@ function changeMyHand(newCardsAmount, newCardsSet) {
     if (+currentGameStatus.myCardsAmount < +newCardsAmount) {
         const myHand = document.querySelector('.hand');
         // Берем элементы, которые отсутствуют в текущем множестве
-        let cardsToInsert = new Set([...newCardsSet].filter(x => !currentGameStatus.has(x)));
+        let cardsToInsert = new Set([...newCardsSet].filter(x => !currentGameStatus.myCardsSet.has(x)));
         while (+currentGameStatus.myCardsAmount !== +newCardsAmount) {
             cardsToInsert.forEach(function(item) {
                 insertCard(myHand, 'hand__card', String(item));
@@ -41,17 +41,17 @@ function changeMyHand(newCardsAmount, newCardsSet) {
     
 }
 
-function changeTableCardOrShowPassMessage(sectionName, containerClassName, cardId) {
+function changeTableCardOrShowPassMessage(sectionName, shortContainerClassName, containerClassName, cardId) {
     const section = document.querySelector('.' + sectionName);
     const classArray = containerClassName.split('.');
     let newClassName = classArray[0] + " " + classArray[1] + " " + classArray[2];
-    console.log(newClass);
+    console.log(newClassName);
     // Если опонент пасует
     if (+cardId === -1) {
         showPass();
     }
     if (+cardId === 0) {
-        removeCard(containerClassName);
+        removeDeckCard(shortContainerClassName);
     }
     if (+cardId > 0) {
         insertCard(section, String(newClassName), String(cardId));
