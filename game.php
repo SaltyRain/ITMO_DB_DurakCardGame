@@ -10,7 +10,7 @@
         $host = $_SERVER['HTTP_HOST'];
         $uri = rtrim(dirname($_SESSION['PHP_SELF']), '/\\');
         $extra = 'login.php';
-        header("Location: http://localhost/$extra");
+        header("Location: http://localhost/durak/$extra");
         exit;
     }
 
@@ -37,8 +37,28 @@
     /* закрытие соединения */
     mysqli_close($link);
 
+    $link2 = mysqli_connect('localhost', 'root', '', 'durak');
+    if (!$link2) {
+        die('Ошибка соединения: ' . mysqli_error($link2));
+    }
+
+    $query2 = 'CALL getPlayersIdsAndTrumpSuit("'.$log.'", "'.$gameid.'");';
+
+    $result2 = mysqli_query($link2, $query2);
+    if (!$result2) {
+        die('Неверный запрос: ' . mysqli_error($link2));
+    }
+
+    $playersidsandtrumpsuit = mysqli_fetch_array($result2);
+    
+    $myid = $playersidsandtrumpsuit[0];
+    $oponentid = $playersidsandtrumpsuit[1];
+    $trumpsuit = $playersidsandtrumpsuit[2];
+    
+    /* закрытие соединения */
+    mysqli_close($link2);
+
 ?>
-<!-- Warning: mysqli_fetch_assoc() expects parameter 1 to be mysqli_result, bool given in C:\xampp\htdocs\durak\game.php on line 23 -->
 
 
 <!DOCTYPE html>
@@ -63,12 +83,15 @@
 
         </section>
 
+        <!-- <div class="pass-message" id="hideMe">
+            Пас
+        </div> -->
+        <div class="pass-message-section">
+
+        </div>
+
         <section class="deck">
             <h2 class="visually-hidden">Колода</h2>
-
-            <div class="table-card deck__back-card"><img src="img/back.png" alt="Колода"></div>
-            <div class="table-card deck__kozyr" id="cardDefend"><img src="img/2.png" id="2"></div>
-            <div class="deck__card-counter"></div>
         </section>
 
         <section class="table">
@@ -78,9 +101,7 @@
         <section class="trash">
             <h2 class="visually-hidden">Бита</h2>
         
-            <div class="table-card trash__back-card" id="trashCard">
-                <img src="img/back.png" alt="">
-            </div>
+
         </section>
 
         <section class="hand">
@@ -99,47 +120,72 @@
 
     <script src="js/request.js"></script>
     <script src="js/asyncwaiters.js"></script>
-    <script src="js/handlers.js"></script>
-    <script src="js/draw-game.js"></script>
-    <script>
-        let resultString = '<?php echo $resultString; ?>';
-        resultString = resultString.substring(0, resultString.length-1); // убираем + в конце
+    
 
-        let resultRows = resultString.split('+');
-        let resultArray = [];
-        resultRows.forEach(function(item, i, arr) {
-            resultArray.push(JSON.parse(item));
-        });
+    <script src="js/constants.js"></script>
+
+    <script src="js/update-game-status.js"></script>
+
+    <script src="js/insert-remove-card.js"></script>
+
+    <script src="js/draw-game.js"></script>
+    <script src="js/handlers.js"></script>
+
+    
+
+    <script src="js/switch-player-buttons.js"></script>
+    
+    <script src="js/send-gamestatus-request.js"></script>
+    <script src="js/get-my-cards-set.js"></script>
+
+    <script src="js/create-gamestatus-object.js"></script>
+    <script src="js/show-winner.js"></script>
+    <script src="js/move.js"></script>
+    <script src="js/show-pass.js"></script>
+    <script>
+        // Константные значения, изначальный парсинг данных и изначальная отрисовка
+        window.myId = <?php echo $myid ?>;
+        window.oponentId = <?php echo $oponentid ?>;
+        window.trumpSuit = '<?php echo $trumpsuit ?>';
+        window.userLogin = '<?php echo $log ?>';
+        window.userPassword = '<?php echo $pswd ?>';
+        window.gameId = '<?php echo $gameid ?>';
         // Поля массива: 
         // attackingCard - атакующая карта на столе. Если 0, то ее нет
         // defendingCard - защищающаяся карта на  столе. Если 0, то ее нет. Если -1, то игрок пасует
         // deckCardsAmount - кол-во карт в колоде
         // trashCardsAmount - кол-во карт в сбросе
+        // myCardsAmount - число карт в моей руке
         // oponentCardsAmount - кол-во карт у противника
         // trumpCard - карта-козырь игры
+        // winnerId - победитель игры. Если 0 - игра продолжается
+        // attackerId - id атакующего игрока
         // playerCard - карты игрока
-        console.log(resultArray);
-        console.log(resultArray[0].id_playerCard);
-        console.log(resultArray[0].oponentCardsAmount);
 
-        let myCardsArray = [];
-        resultArray.forEach(function(item) {
-            myCardsArray.push(item.playerCard);
-        })
-        let myCardsSet = new Set(myCardsArray);
-        // Изначальная отрисовка страницы
-        drawOponentHand(resultArray[0].oponentCardsAmount);
-        drawMyHand(myCardsSet);
-        drawTableCard(TABLE, ATTACKER_CARD_CONTAINER, resultArray[0].attackingCard);
-        drawTableCard(TABLE, DEFENDER_CARD_CONTAINER, resultArray[0].defendingCard);
-        // drawOponentHand(resultArray[0].oponentCardsAmount);
+        const initalString = '<?php echo $resultString; ?>';
+        const initalArray = parseServerData(initalString);
 
 
+        let currentGameStatus = createGameStatusObject(initalArray);
+
+        
+        updateGameStatus(initalString);
+        initialDraw();
+
+        console.log(window.myId);
+        console.log(currentGameStatus.attackerId);
+        switchPassButton(+window.myId, +currentGameStatus.attackerId);
+        switchOkButton(+window.myId, +currentGameStatus.attackerId);
+
+        
+        sendGameStatusRequest(window.userLogin, window.userPassword, window.gameId);
         
 
         
     </script>
-    
+     <script src="js/event-listeners.js"></script>
+     <script src="js/change-game.js"></script>
+
     </main>
 </body>
 </html>

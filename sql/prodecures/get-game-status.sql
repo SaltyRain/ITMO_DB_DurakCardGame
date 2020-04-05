@@ -14,6 +14,9 @@ getgamestate_label : BEGIN
     DECLARE defendingCard INT;
     DECLARE trumpCard INT UNSIGNED;
 
+    DECLARE winnerId INT UNSIGNED;
+    DECLARE attackerId INT UNSIGNED;
+
     IF(NOT checkPassword(user_login, user_password)) THEN
         SELECT "INCORRECT PSWD";
         LEAVE getgamestate_label;
@@ -41,7 +44,7 @@ getgamestate_label : BEGIN
 
     IF (NOT EXISTS (SELECT id_card FROM defendingCards WHERE id_deck = deckid)) THEN
         SET defendingCard = 0;
-    ELSEIF ((SELECT id_card FROM defendingCards WHERE id_deck = deckid) IS NULL) THEN
+    ELSEIF ((SELECT id_card FROM defendingCards WHERE id_deck = deckid) = -1) THEN
         SET defendingCard = -1;
     ELSE
         SET defendingCard = getCardType((SELECT id_card FROM defendingCards WHERE id_deck = deckid));
@@ -54,6 +57,16 @@ getgamestate_label : BEGIN
         SET trumpCard = getCardType((SELECT MAX(id_card) FROM cardsInDeck WHERE id_deck = deckid));
     END IF;
 
+    -- Победитель
+    IF ((SELECT winner FROM decks WHERE id_deck = deckid) IS NULL) THEN
+        SET winnerId = 0;
+    ELSE 
+        SET winnerId = (SELECT winner FROM decks WHERE id_deck = deckid);
+    END IF;
+
+    --  Атакующий игрок
+    SET attackerId = (SELECT id_attacker FROM decks WHERE id_deck = deckid);
+
     -- Массив карт игрока
     CREATE TEMPORARY TABLE handCards (
         playerCard INT UNSIGNED
@@ -61,7 +74,7 @@ getgamestate_label : BEGIN
 
     INSERT INTO handCards SELECT id_typecard FROM cardTypes WHERE id_typecard IN (SELECT id_typecard FROM cards WHERE id_card IN (SELECT id_card FROM playersCards WHERE id_player = playerId));
 
-    SELECT deckCardsAmount, oponentCardsAmount, trashCardsAmount, attackingCard, defendingCard, trumpCard, playerCard FROM handCards;
+    SELECT deckCardsAmount, oponentCardsAmount, trashCardsAmount, attackingCard, defendingCard, trumpCard, winnerId, attackerId, playerCard FROM handCards;
 
     DROP TABLE handCards;
 END //

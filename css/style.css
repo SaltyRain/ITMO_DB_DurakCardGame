@@ -1,3 +1,4 @@
+
 /* --------------------GLOBAL------------------- */
 
 body {
@@ -213,6 +214,8 @@ main {
 }
 
 /* ------------------------------ GAME -------------------------------- */
+
+
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -289,12 +292,13 @@ main {
     }
     .deck__kozyr {
     position: absolute;
-    margin-left: 50px;
+    /* margin-left: 50px; */
     z-index: -1;
     transform: rotate(90deg);
     }
     .deck__back-card {
     position: absolute;
+    margin-left: -50px;
     }
     
     .oponent-hand {
@@ -349,5 +353,47 @@ main {
     display: block;
     color: #fff;
     font-size: 20px;
-    padding-bottom: 16px;
+    margin-top: -60px;
+    margin-bottom: 10px;
 }
+
+.deck__card-counter {
+    margin-top: 300px;
+    margin-left: 50px;
+    
+}
+
+
+.pass-message {
+    position: absolute;
+    /* margin-top: 100px; */
+    top: 100px;
+    left: 40vw;
+    font-size: 32px;
+}
+
+ #hideMe {
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
+} 

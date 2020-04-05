@@ -1,26 +1,28 @@
-"use strict";
+function initialDraw() {
+    drawOponentHand(currentGameStatus.oponentCardsAmount);
+    drawMyHand(currentGameStatus.myCardsSet);
 
-const BACK_CARD = 'back';
-const CARD = '__card';
+    drawTableCard(TABLE, ATTACKER_CARD_CONTAINER, currentGameStatus.attackingCard);
+    drawTableCard(TABLE, DEFENDER_CARD_CONTAINER, currentGameStatus.defendingCard);
+    drawTableCard(DECK, KOZYR_CARD_CONTAINER, currentGameStatus.trumpCard);
+    
+    drawDeckOrTrash(DECK, DECK_CARD_CONTAINER, currentGameStatus.deckCardsAmount);
+    drawDeckOrTrash(TRASH, TRASH_CARD_CONTAINER, currentGameStatus.trashCardsAmount);
 
-const TABLE = 'table';
-const MY_HAND = 'hand';
-const OPONENT_HAND = 'oponent-hand';
-
-
-const ATTACKER_CARD_CONTAINER = 'table-card table__card table__card_attack';
-const DEFENDER_CARD_CONTAINER = 'table-card table__card table__card_defend';
-
-const MY_HAND_CARD_CONTAINER = MY_HAND + CARD;
-const OPONENT_HAND_CARD_CONTAINER = OPONENT_HAND + CARD;
-
+    drawPlayerRole(currentGameStatus.attackerId);
+    drawCounter(currentGameStatus.deckCardsAmount);
+}
 
 function drawTableCard(sectionName, containerClassName, cardId) {
     const section = document.querySelector('.' + sectionName);
-    // const cardContainer = document.querySelector('.' + containerClassName);
-    if (+cardId !== 0)
+    if (+cardId !== 0 && +cardId !== -1)
         insertCard(section, containerClassName, cardId);
+}
 
+function drawDeckOrTrash(sectionName, containerClassName, cardsAmount) {
+    const section = document.querySelector('.' + sectionName);
+    if (+cardsAmount > 0)
+    insertCard(section, containerClassName, BACK_CARD);
 }
 
 
@@ -38,78 +40,26 @@ function drawMyHand(cardsSet) {
     })
 }
 
-function insertCard(section, containerClassName, cardId) {
-    const cardContainer = document.createElement('div');
-    cardContainer.className = containerClassName;
+function drawCounter(cardsAmount) {
+    const section = document.querySelector('.' + DECK);
+    const counterContainer = document.createElement('div');
+    counterContainer.className = COUNTER_CONTAINER;
+    counterContainer.textContent = 'Карт в колоде: ' + cardsAmount;
 
-    const card = document.createElement('img');
-    card.src = 'img/' + cardId + '.png';
-    if (cardId !== BACK_CARD) {
-        card.id = cardId;
-        card.alt = 'Карта в моей руке ' + cardId;
+    section.append(counterContainer);
+}
+
+function drawPlayerRole(attackerId) {
+    const whooseTurn = document.querySelector('.game-info__whoose-turn');
+    if (+window.myId === +attackerId) {
+        whooseTurn.textContent = 'Ваш ход';
     }
     else {
-        card.alt = 'Карта опонента';
-    }
-
-    section.append(cardContainer);
-    cardContainer.append(card);
-}
-
-function removeCard(containerClassName) {
-    document.querySelectorAll('.' + containerClassName + ':last-child')[0].remove();
-}
-
-
-function changeOponentHand(cardsAmount) {
-    let currentCardsAmount = document.querySelectorAll('.oponent-hand__card').length;
-    if (currentCardsAmount < cardsAmount) {
-        const oponentHandContainer = document.querySelector('.oponent-hand');
-        while (currentCardsAmount !== cardsAmount) {
-            // insertOponentCard(oponentHandContainer);
-            insertCard(oponentHandContainer, '.oponent-hand__card', BACK_CARD);
-            currentCardsAmount = document.querySelectorAll('.oponent-hand__card').length;
-        }
-    }
-    if (currentCardsAmount > cardsAmount) {
-        while (currentCardsAmount !== cardsAmount) {
-            // removeOponentCard();
-            removeCard('.oponent-hand__card');
-            currentCardsAmount = document.querySelectorAll('.oponent-hand__card').length;
-        }
+        whooseTurn.textContent = 'Ход противника';
     }
 }
 
-function changeHand(hand, containerClassName, cardsAmount, cardsArray = 0) {
-    let currentCardsAmount = document.querySelectorAll(containerClassName).length;
-    if (hand === MY_HAND) {
-        const myHand = document.querySelector(hand);
-        let currentCardsInHandId = [];
 
-        let cardsInHandArray = document.querySelectorAll('.hand__card');
-        cardsInHandArray.forEach(function(item) {
-            currentCardsInHandId.push(item.children[0].id);
-        })
-        console.log(currentCardsInHandId);
-
-
-
-        
-    }
-    else {
-        if (currentCardsAmount < cardsAmount) {
-            const oponentHand = document.querySelector(hand);
-            while (currentCardsAmount !== cardsAmount) {
-                insertCard(oponentHand, containerClassName, BACK_CARD);
-                currentCardsAmount++;
-            }
-        }
-        if (currentCardsAmount < cardsAmount) {
-            removeCard(containerClassName);
-        }
-    }
-    // if (currentCardsAmount < cardsAmount)
-}
 
 
 

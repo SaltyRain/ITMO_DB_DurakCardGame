@@ -1,8 +1,8 @@
 DELIMITER //
-CREATE PROCEDURE attackMove(user_login varchar(50), user_password varchar(255), deckid INT, cardid INT UNSIGNED)
+CREATE PROCEDURE attackMove(user_login varchar(50), user_password varchar(255), deckid INT, typecardid INT UNSIGNED)
 attackmove_label : BEGIN
     DECLARE playerId INT UNSIGNED;
-
+    DECLARE cardId INT UNSIGNED;
     -- Проверка пароля
     IF(NOT checkPassword(user_login, user_password)) THEN
         SELECT "INCORRECT PSWD";
@@ -10,6 +10,7 @@ attackmove_label : BEGIN
     END IF;
 
     SET playerId = getPlayerId(getUserId(user_login), deckid);
+    SET cardId = getPlayerGameCardFromType(typecardid, playerId);
 
     -- Проверяем, является ли текущий игрок атакующим
     IF (playerId <> (SELECT id_attacker FROM Decks WHERE id_deck = deckid)) THEN
@@ -18,7 +19,7 @@ attackmove_label : BEGIN
     END IF;
 
     -- Проверяем, есть ли такая карта в руке атакующего
-    IF (NOT EXISTS (SELECT id_card FROM playersCards WHERE id_player = playerId AND id_card = cardid)) THEN
+    IF (NOT EXISTS (SELECT id_card FROM playersCards WHERE id_player = playerId AND id_card = cardId)) THEN
         SELECT "YOU DONT HAVE THIS CARD";
         LEAVE attackmove_label;
     END IF;
@@ -31,9 +32,9 @@ attackmove_label : BEGIN
 
 
     -- Добавляем карту на стол в ячейку атакуюшей карты
-    INSERT INTO attackingCards(id_card, id_deck) VALUE (cardid, deckid);
+    INSERT INTO attackingCards(id_card, id_deck) VALUE (typecardid, deckid);
     -- Удаляем карту и руки игрока
-    DELETE FROM playersCards WHERE id_card = cardid AND id_player = playerId;
+    DELETE FROM playersCards WHERE id_card = cardId AND id_player = playerId;
 
-    SELECT "ATTACKING CARD INSERTED";
+    SELECT "INSERTING ATTACKING CARD";
 END //
