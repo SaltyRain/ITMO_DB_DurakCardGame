@@ -150,6 +150,7 @@
         window.userLogin = '<?php echo $log ?>';
         window.userPassword = '<?php echo $pswd ?>';
         window.gameId = '<?php echo $gameid ?>';
+
         // Поля массива: 
         // attackingCard - атакующая карта на столе. Если 0, то ее нет
         // defendingCard - защищающаяся карта на  столе. Если 0, то ее нет. Если -1, то игрок пасует
@@ -160,7 +161,7 @@
         // trumpCard - карта-козырь игры
         // winnerId - победитель игры. Если 0 - игра продолжается
         // attackerId - id атакующего игрока
-        // playerCard - карты игрока
+        // myCardsSet - множество моих карт
 
         const initalString = '<?php echo $resultString; ?>';
         const initalArray = parseServerData(initalString);

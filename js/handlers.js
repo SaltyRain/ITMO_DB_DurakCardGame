@@ -50,6 +50,7 @@ function _changegamestatus(response, obj) {
 
     // Изменение кол-ва карт в руке противника
     if (+currentGameStatus.oponentCardsAmount !== +newGameStatus.oponentCardsAmount) {
+        console.log(newGameStatus.oponentCardsAmount);
         changeOponentHand(+newGameStatus.oponentCardsAmount);
         console.log('Изменение кол-ва карт в руке противника');
         flag = true;
@@ -57,21 +58,23 @@ function _changegamestatus(response, obj) {
 
     // Изменение моей руки
     if (+currentGameStatus.myCardsAmount !== +newGameStatus.myCardsAmount) {
-        changeMyHand(+newGameStatus.myCardsAmount, +newGameStatus.playerCard);
+        console.log(newGameStatus.myCardsAmount);
+        console.log(newGameStatus.myCardsSet);
+        changeMyHand(+newGameStatus.myCardsAmount, +newGameStatus.myCardsSet);
         console.log('Изменение моей руки');
         flag = true;
     }
 
     // Изменение атакующей карты
     if (+currentGameStatus.attackingCard !== +newGameStatus.attackingCard) {
-        changeTableCardOrShowPassMessage('table', 'table__card_attack', +newGameStatus.attackingCard);
+        changeTableCardOrShowPassMessage('table', 'table-card.table__card.table__card_attack', +newGameStatus.attackingCard);
         console.log('Изменение атакующей карты');
         flag = true;
     }
 
     // Изменение защищающейся карты
     if (+currentGameStatus.defendingCard !== +newGameStatus.defendingCard) {
-        changeTableCardOrShowPassMessage('table', 'table__card_defend', +newGameStatus.defendingCard);
+        changeTableCardOrShowPassMessage('table', 'table-card.table__card.table__card_defend', +newGameStatus.defendingCard);
         console.log('Изменение защищающейся карты');
         flag = true;
     }
@@ -115,7 +118,7 @@ function _changegamestatus(response, obj) {
     // изменяем состояние игры
     if (flag === true) {
         console.log('Меняю состояние игры');
-        currentGameStatus = newGameStatus;
+        currentGameStatus = updateGameStatus(response.responseText);
     }
 }
 
@@ -124,6 +127,7 @@ function _attackmove(response, obj) {
     console.log(response);
     let resp_ob = JSON.parse(response.responseText);
     console.log(resp_ob);
+    console.log(obj['cardId']);
     if (("INCORRECT PSWD" in resp_ob) || ("NOT YOUR ATTACK TURN" in resp_ob) || ("YOU DONT HAVE THIS CARD" in resp_ob) || ("THERE IS ATTACKING CARD ALREADY" in resp_ob))
         return;
     if (("INSERTING ATTACKING CARD" in resp_ob)) {

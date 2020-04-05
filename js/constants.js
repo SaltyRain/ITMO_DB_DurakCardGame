@@ -7,7 +7,7 @@ const OPONENT_HAND = 'oponent-hand';
 const DECK = 'deck';
 const TRASH = 'trash';
 
-
+// 'hand__card'
 const ATTACKER_CARD_CONTAINER = 'table-card table__card table__card_attack';
 const DEFENDER_CARD_CONTAINER = 'table-card table__card table__card_defend';
 
@@ -18,3 +18,6 @@ const COUNTER_CONTAINER = 'deck__card-counter';
 
 const MY_HAND_CARD_CONTAINER = MY_HAND + CARD;
 const OPONENT_HAND_CARD_CONTAINER = OPONENT_HAND + CARD;
+
+//.table-card.table__card.table__card_attack
+// .table-card.table__card.table__card_defend

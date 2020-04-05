@@ -4,13 +4,13 @@ function insertCard(section, containerClassName, cardId) {
 
     const card = document.createElement('img');
     card.src = 'img/' + cardId + '.png';
-    if (cardId !== BACK_CARD) {
+    if (cardId !== 'back') {
         card.id = cardId;
-        card.alt = 'Карта в моей руке ' + cardId;
+        // card.alt = 'Карта в моей руке ' + cardId;
     }
-    else {
-        card.alt = 'Карта опонента';
-    }
+    // else {
+    //     card.alt = 'Карта опонента';
+    // }
 
     section.append(cardContainer);
     cardContainer.append(card);
