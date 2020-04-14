@@ -13,7 +13,7 @@ attackmove_label : BEGIN
     SET cardId = getPlayerGameCardFromType(typecardid, playerId);
 
     -- Проверяем, является ли текущий игрок атакующим
-    IF (playerId <> (SELECT id_attacker FROM Decks WHERE id_deck = deckid)) THEN
+    IF (playerId <> (SELECT id_attacker FROM decks WHERE id_deck = deckid)) THEN
         SELECT "NOT YOUR ATTACK TURN";
         LEAVE attackmove_label;
     END IF;
@@ -32,10 +32,12 @@ attackmove_label : BEGIN
 
 
 
-    -- Добавляем карту на стол в ячейку атакуюшей карты
-    INSERT INTO attackingCards(id_card, id_deck) VALUE (cardId, deckid);
-    -- Удаляем карту и руки игрока
-    DELETE FROM playersCards WHERE id_card = cardId AND id_player = playerId;
-
+    START TRANSACTION;
+        -- Добавляем карту на стол в ячейку атакуюшей карты
+        INSERT INTO attackingCards(id_card, id_deck) VALUE (cardId, deckid);
+        -- Удаляем карту и руки игрока
+        DELETE FROM playersCards WHERE id_card = cardId AND id_player = playerId;
+    COMMIT;
+    
     SELECT "INSERTING ATTACKING CARD";
 END //

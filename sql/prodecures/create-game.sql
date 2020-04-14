@@ -1,10 +1,11 @@
 DELIMITER //
 CREATE PROCEDURE createGame(user_login varchar(50), user2_login varchar(50), user_password varchar(255))
 creategame_label : BEGIN
-    DECLARE nextDeck INT UNSIGNED 0;
+    DECLARE nextDeck INT UNSIGNED DEFAULT 0;
     DECLARE userId INT UNSIGNED DEFAULT 0;
     DECLARE userId2 INT UNSIGNED DEFAULT 0;
-    
+    -- DECLARE deckTrump VARCHAR(6);
+
     IF (user_login = user2_login) THEN
         SELECT "GAME WITH YOURSELF!";
         LEAVE creategame_label;
@@ -32,13 +33,13 @@ creategame_label : BEGIN
     END IF;
 
 
-    SET nextDeck = (SELECT 1 + (SELECT MAX(id_deck) FROM Decks));
+    SET nextDeck = (SELECT 1 + (SELECT MAX(id_deck) FROM decks));
     -- Добавление колоду
     INSERT INTO decks VALUES(nextDeck, NULL, NULL, NULL); 
 
     -- Добавление игроков
-    INSERT INTO players VALUES(NULL, userId, (SELECT MAX(id_deck) from (decks)));
-	INSERT INTO players VALUES(NULL, userId2, (SELECT MAX(id_deck) FROM(decks)));
+    INSERT INTO players VALUES(NULL, userId, (SELECT MAX(id_deck) FROM decks));
+	INSERT INTO players VALUES(NULL, userId2, (SELECT MAX(id_deck) FROM decks));
 
     UPDATE invites SET confirm = TRUE WHERE id_inviting = userId2 AND id_invited = userId;
 
@@ -46,10 +47,12 @@ creategame_label : BEGIN
     CALL shuffleDeck(nextDeck);
 
     -- сохранение значения козыря
+    -- SET deckTrump = getDeckTrump(nextDeck);
     UPDATE decks SET trump = getDeckTrump(nextDeck) WHERE id_deck = nextDeck;
     
-    -- определение начинающего игрока и запись в таблицу Decks значения
+    -- определение начинающего игрока и запись в таблицу decks значения
     CALL setStartPlayer(nextDeck);
     
    SELECT 'OK', nextDeck;
 END //
+

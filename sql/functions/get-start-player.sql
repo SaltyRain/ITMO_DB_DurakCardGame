@@ -12,7 +12,7 @@ BEGIN
 
     DECLARE trump VARCHAR(6);
 
-    SET trump = (SELECT trump FROM Decks WHERE id_deck = deckid);
+    SET trump = (SELECT trump FROM decks WHERE id_deck = deckid);
     SET player1Id = (SELECT MIN(id_player) FROM players WHERE id_deck = deckid);
     SET player2Id = (SELECT MAX(id_player) FROM players WHERE id_deck = deckid);
     

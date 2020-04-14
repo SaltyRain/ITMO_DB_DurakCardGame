@@ -114,7 +114,7 @@
             <span class="game-info__whoose-turn"></span>
 
             <button class="game-info__btn btn" type="button" id="passButton" disabled>Беру</button>
-            <button class="game-info__btn btn" type="button" id="okButton" disabled>ОК</button>
+            <button class="game-info__btn btn" type="button" id="okButton">ОК</button>
         </section>
 
 
@@ -173,10 +173,10 @@
         updateGameStatus(initalString);
         initialDraw();
 
-        console.log(window.myId);
-        console.log(currentGameStatus.attackerId);
-        switchPassButton(+window.myId, +currentGameStatus.attackerId);
-        switchOkButton(+window.myId, +currentGameStatus.attackerId);
+        // console.log(window.myId);
+        // console.log(currentGameStatus.attackerId);
+        switchPassButton(window.myId, currentGameStatus.attackerId);
+        // switchOkButton(window.myId, currentGameStatus.attackerId);
 
         
         sendGameStatusRequest(window.userLogin, window.userPassword, window.gameId);

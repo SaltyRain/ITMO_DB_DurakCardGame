@@ -1,15 +1,15 @@
 function changeOponentHand(newCardsAmount) {
     let currentCardsAmount = document.querySelectorAll('.oponent-hand__card').length;
-    if (+currentCardsAmount < +newCardsAmount) {
+    if (currentCardsAmount < newCardsAmount) {
         const oponentHand = document.querySelector('.oponent-hand');
-        while (+currentCardsAmount !== +newCardsAmount) {
+        while (currentCardsAmount !== newCardsAmount) {
             // insertOponentCard(oponentHandContainer);
-            insertCard(oponentHand, 'oponent-hand__card', BACK_CARD);
+            insertCard(oponentHand, 'oponent-hand__card', 'back');
             currentCardsAmount = document.querySelectorAll('.oponent-hand__card').length;
         }
     }
-    if (+currentCardsAmount > +newCardsAmount) {
-        while (+currentCardsAmount !== +newCardsAmount) {
+    if (currentCardsAmount > newCardsAmount) {
+        while (currentCardsAmount !== newCardsAmount) {
             // removeOponentCard();
             removeCard('oponent-hand__card');
             currentCardsAmount = document.querySelectorAll('.oponent-hand__card').length;

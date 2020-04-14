@@ -13,6 +13,9 @@ function initialDraw() {
     drawCounter(currentGameStatus.deckCardsAmount);
 
     drawSuit();
+
+    // switchOnOkButton();
+    // switchOnPassButton();
 }
 
 function drawTableCard(sectionName, containerClassName, cardId) {
@@ -20,6 +23,11 @@ function drawTableCard(sectionName, containerClassName, cardId) {
     if (+cardId !== 0 && +cardId !== -1)
         insertCard(section, containerClassName, cardId);
 }
+
+
+// function drawTrash(cardsAmount) {
+//     const section = document.querySelector()
+// }
 
 function drawDeckOrTrash(sectionName, containerClassName, cardsAmount) {
     const section = document.querySelector('.' + sectionName);
@@ -71,6 +79,10 @@ function drawSuit() {
             const suit = document.createElement('img');
             suit.src = 'img/' + window.trumpSuit + '.png';
            
+            
+            section.append(cardContainer);
+            cardContainer.append(suit);
+
         }
         else {
             document.querySelector('.deck__back-card').children[0].src = 'img/' + window.trumpSuit + '.png';
@@ -78,8 +90,22 @@ function drawSuit() {
     }
 }
 
+//         switchPassButton(window.myId, currentGameStatus.attackerId);
+//  switchOkButton(window.myId, currentGameStatus.attackerId);
 
+function switchOnOkButton () {
+    const okButton = document.querySelector('#okButton');
+    if (window.myId === currentGameStatus.attackerId && (currentGameStatus.attackingCard !== 0 && (currentGameStatus.defendingCard !== 0 || currentGameStatus.defendingCard === -1))) {
+        okButton.removeAttribute("disabled");
+    }
+}
 
+function switchOnPassButton () {
+    const passButton = document.querySelector('#passButton');
+    if (window.myId !== currentGameStatus.attackerId) {
+        passButton.removeAttribute("disabled");
+    }
+}
 
 
 

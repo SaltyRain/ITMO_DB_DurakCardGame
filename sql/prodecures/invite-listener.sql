@@ -16,6 +16,6 @@ invitelistener_label : BEGIN
     END IF;
     
     SET userid2 = (SELECT id_inviting FROM invites WHERE id_invited = userid LIMIT 1);
-	SELECT login FROM Users WHERE id_user = userid2;
+	SELECT login FROM users WHERE id_user = userid2;
 
 END //

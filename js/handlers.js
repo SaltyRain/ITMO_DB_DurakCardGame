@@ -30,10 +30,9 @@ function _waitresp(response, obj = null) {
 
 
 function _confirm(response, obj) {
-    // console.log(response);
-    // console.log(obj);
     let resp_ob = JSON.parse(response.responseText);
     // console.log(resp_ob);
+    console.log(resp_ob.nextDeck);
     if (resp_ob.nextDeck !== 0) {
         window.location.href = "game.php?gameid=" + resp_ob.nextDeck;
     }
@@ -49,28 +48,28 @@ function _changegamestatus(response, obj) {
     let flag = false;
 
     // Изменение кол-ва карт в руке противника
-    if (+currentGameStatus.oponentCardsAmount !== +newGameStatus.oponentCardsAmount) {
-        changeOponentHand(+newGameStatus.oponentCardsAmount);
+    if (Number(currentGameStatus.oponentCardsAmount) !== Number(newGameStatus.oponentCardsAmount)) {
+        changeOponentHand(Number(newGameStatus.oponentCardsAmount));
         console.log('Изменение кол-ва карт в руке противника');
         flag = true;
     }
 
     // Изменение моей руки
-    if (+currentGameStatus.myCardsAmount !== +newGameStatus.myCardsAmount) {
-        changeMyHand(+newGameStatus.myCardsAmount, +newGameStatus.myCardsSet);
+    if (Number(currentGameStatus.myCardsAmount) !== Number(newGameStatus.myCardsAmount)) {
+        changeMyHand(newGameStatus.myCardsAmount, newGameStatus.myCardsSet);
         console.log('Изменение моей руки');
         flag = true;
     }
 
     // Изменение атакующей карты
-    if (+currentGameStatus.attackingCard !== +newGameStatus.attackingCard) {
+    if (currentGameStatus.attackingCard !== newGameStatus.attackingCard) {
         changeTableCardOrShowPassMessage('table', 'table__card_attack', 'table-card.table__card.table__card_attack', +newGameStatus.attackingCard);
         console.log('Изменение атакующей карты');
         flag = true;
     }
 
     // Изменение защищающейся карты
-    if (+currentGameStatus.defendingCard !== +newGameStatus.defendingCard) {
+    if (currentGameStatus.defendingCard !== newGameStatus.defendingCard) {
         changeTableCardOrShowPassMessage('table', 'table__card_defend', 'table-card.table__card.table__card_defend', +newGameStatus.defendingCard);
         console.log('Изменение защищающейся карты');
         flag = true;
@@ -92,7 +91,7 @@ function _changegamestatus(response, obj) {
 
     // Добавление биты, если она появилась 
     if ((+currentGameStatus.trashCardsAmount !== +newGameStatus.trashCardsAmount) && (+currentGameStatus.trashCardsAmount === 0) ) {
-        drawDeckOrTrash(TRASH, 'trash__back-card', +newGameStatus.trashCardsAmount);
+        drawDeckOrTrash(TRASH, TRASH_CARD_CONTAINER, +newGameStatus.trashCardsAmount);
         console.log('Добавление биты, если она появилась');
         flag = true;
     }
@@ -103,7 +102,7 @@ function _changegamestatus(response, obj) {
     // Переключение кнопки ок
     if (((+currentGameStatus.attackingCard !== +newGameStatus.attackingCard) || (+currentGameStatus.defendingCard !== +newGameStatus.defendingCard)) && (+newGameStatus.attackingCard !== 0) && (+newGameStatus.defendingCard !== 0)) {
         console.log('Переключение кнопки ок');
-        switchOkButton(+window.myId, +currentGameStatus.attackerId);
+        turnOnOkButton(window.myId, newGameStatus.attackerId);
     }
 
     // Сообщение о победителе

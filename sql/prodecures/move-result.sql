@@ -12,7 +12,7 @@ moveresult_label : BEGIN
     -- То, что возвращается игроку в ответе
     DECLARE winnerId INT UNSIGNED;
     DECLARE newAttackerCardId INT UNSIGNED;
-    DECLARE existsNewDefenderCard INT UNSIGNED;
+    DECLARE existsNewDefenderCard INT UNSIGNED DEFAULT 0;
     DECLARE cardsInDeckAmount INT UNSIGNED;
 
     -- Проверка пароля
@@ -33,7 +33,7 @@ moveresult_label : BEGIN
     IF (defCard = -1) THEN
         -- карта атакующего добавляется противнику в руку
         INSERT INTO playersCards(id_card, id_player) VALUE (attackCard, defenderid);
-
+        SET existsNewDefenderCard = 1;
 
     ELSE
         -- Игрок отбился
@@ -54,8 +54,10 @@ moveresult_label : BEGIN
                 -- достаем следующую карту из колоды
                 SET nextDeckCard = (SELECT MIN(id_card) FROM cardsInDeck WHERE id_deck = deckid);
                 -- даем карту атакующему игроку
-                INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, attackerid);
-                DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
+                START TRANSACTION;
+                    INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, attackerid);
+                    DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
+                COMMIT;
 
                 SET newAttackerCardId = nextDeckCard;
             END IF;
@@ -72,8 +74,10 @@ moveresult_label : BEGIN
                     -- достаем следующую карту из колоды
                     SET nextDeckCard = (SELECT MIN(id_card) FROM cardsInDeck WHERE id_deck = deckid);
                     -- даем карту атакующему игроку
-                    INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, defenderid);
-                    DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
+                    START TRANSACTION;
+                        INSERT INTO playersCards(id_card, id_player) VALUE (nextDeckCard, defenderid);
+                        DELETE FROM cardsInDeck WHERE id_card = nextDeckCard AND id_deck = deckid;
+                    COMMIT;
 
                     SET existsNewDefenderCard = 1;
                 END IF;

@@ -48,10 +48,13 @@ defendmove_label : BEGIN
             (attackCardSuit <> gameTrumpSuit AND defendCardSuit = gameTrumpSuit)
             )
         THEN
-            -- Игрок может отбиться. Карта кладется на стол
-            INSERT INTO defendingCards(id_card, id_deck) VALUE (defendCardId, deckid);
-            -- Удаляем из руки
-            DELETE FROM playersCards WHERE id_card = defendCardId AND id_player = playerId;
+            START TRANSACTION;
+                -- Игрок может отбиться. Карта кладется на стол
+                INSERT INTO defendingCards(id_card, id_deck) VALUE (defendCardId, deckid);
+                -- Удаляем из руки
+                DELETE FROM playersCards WHERE id_card = defendCardId AND id_player = playerId;
+            COMMIT;
+            
             SELECT "INSERTING DEFENDING CARD";
         ELSE 
             SELECT "YOU CANT USE THIS CARD";

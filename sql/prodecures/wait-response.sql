@@ -26,6 +26,6 @@ waitresponse_label: BEGIN
         LEAVE waitresponse_label;
     ELSE
         DELETE FROM invites WHERE id_inviting = userid AND id_invited = userid2;
-        SELECT MAX(id_deck) FROM Decks;
+        SELECT MAX(id_deck) FROM decks;
     END IF;
 END //
